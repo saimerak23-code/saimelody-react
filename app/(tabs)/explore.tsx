@@ -108,6 +108,14 @@ export default function TabTwoScreen() {
 
   const getData = async () => {
     try {
+      const url = aUrl + "/center/getcenters";
+      const response = await fetch(url, {
+        method: "GET", // or POST, PUT, etc.
+        //headers: new Headers({
+        //  "ngrok-skip-browser-warning": "true", // The value can be anything
+        //}),
+      });
+      const json: ICenter[] = await response.json();
       const jsonValue = await AsyncStorage.getItem("saiprofile");
       if (jsonValue != null) {
         const prof: iProfile = JSON.parse(jsonValue ?? "");
@@ -119,15 +127,6 @@ export default function TabTwoScreen() {
         setCenterName(prof.centerName);
         setOfficer(prof.officer);
         setShowPd(false);
-
-        const url = aUrl + "/center/getcenters";
-        const response = await fetch(url, {
-          method: "GET", // or POST, PUT, etc.
-          //headers: new Headers({
-          //  "ngrok-skip-browser-warning": "true", // The value can be anything
-          //}),
-        });
-        const json: ICenter[] = await response.json();
         const result: iCenterProfile = {
           centers: json,
           profile: profile,
@@ -136,7 +135,7 @@ export default function TabTwoScreen() {
         return result;
       } else {
         const result: iCenterProfile = {
-          centers: [],
+          centers: json,
           profile: defProfile,
         };
         setCenterProfile(result);
